@@ -20,6 +20,7 @@ body {
 
 /* Header */
 header {
+    background: rgba(0, 0, 0, 0.8); /* Fallback for browsers that don't support backdrop-filter */
     background: rgba(0, 0, 0, 0.3);
     backdrop-filter: blur(10px);
     padding: 20px 0;
@@ -326,8 +327,8 @@ nav a:hover {
 }
 
 .contact-item p {
+    color: white;
     font-size: 1.1rem;
-    color: #333;
 }
 
 /* Footer */

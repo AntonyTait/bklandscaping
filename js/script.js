@@ -22,9 +22,36 @@ window.addEventListener('scroll', function() {
     }
 });
 
-// Form submission via AJAX to prevent redirect
+// Form validation and submission
 document.getElementById('quoteForm').addEventListener('submit', function(e) {
     e.preventDefault(); // Prevent default form submission
+    
+    // Basic form validation
+    const requiredFields = ['name', 'email', 'service', 'description'];
+    let isValid = true;
+    
+    requiredFields.forEach(field => {
+        const input = document.getElementById(field);
+        if (!input.value.trim()) {
+            isValid = false;
+            input.style.border = '2px solid #ff4444';
+        } else {
+            input.style.border = 'none';
+        }
+    });
+
+    // Email validation
+    const emailInput = document.getElementById('email');
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(emailInput.value.trim())) {
+        isValid = false;
+        emailInput.style.border = '2px solid #ff4444';
+    }
+
+    if (!isValid) {
+        alert('Please fill in all required fields correctly.');
+        return;
+    }
     
     const submitButton = document.querySelector('.submit-button');
     const originalText = submitButton.textContent;
@@ -43,13 +70,19 @@ document.getElementById('quoteForm').addEventListener('submit', function(e) {
         body: formData
     })
     .then(response => {
-        if (response.ok) {
-            // Success - show confirmation message
-            alert('Thank you for your quote request! We will be in contact to discuss your project.');
-            form.reset(); // Clear the form
-        } else {
-            throw new Error('Form submission failed');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
+        return response.text();
+    })
+    .then(() => {
+        // Success - show confirmation message
+        alert('Thank you for your quote request! We will be in contact to discuss your project.');
+        form.reset(); // Clear the form
+        // Reset any validation styling
+        requiredFields.forEach(field => {
+            document.getElementById(field).style.border = 'none';
+        });
     })
     .catch(error => {
         console.error('Error:', error);
@@ -84,3 +117,6 @@ document.querySelectorAll('.service-card').forEach(card => {
     card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
     observer.observe(card);
 });
+
+// Set current year in footer
+document.getElementById('currentYear').textContent = new Date().getFullYear();
