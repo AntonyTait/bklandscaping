@@ -120,3 +120,24 @@ document.querySelectorAll('.service-card').forEach(card => {
 
 // Set current year in footer
 document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+// Hamburger menu toggle
+const hamburger = document.getElementById('hamburger');
+const mainNav = document.getElementById('mainNav');
+
+hamburger.addEventListener('click', function() {
+    const isOpen = mainNav.classList.toggle('open');
+    hamburger.classList.toggle('open');
+    hamburger.setAttribute('aria-expanded', isOpen);
+});
+
+// Close nav when a link is clicked (mobile UX)
+mainNav.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+        if (window.innerWidth <= 768) {
+            mainNav.classList.remove('open');
+            hamburger.classList.remove('open');
+            hamburger.setAttribute('aria-expanded', 'false');
+        }
+    });
+});
